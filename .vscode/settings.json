@@ -4,6 +4,7 @@
         "Configurer",
         "jdbc",
         "notif",
+        "springframework",
         "stompjs"
     ],
     "java.compile.nullAnalysis.mode": "automatic"

@@ -30,6 +30,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotificationNotFoundException.class)
     public ResponseEntity<?> handleNotificationNotFound(NotificationNotFoundException ex) {
         return ResponseEntity.badRequest()
-                .body(Map.of("eror", ex.getMessage()));
+                .body(Map.of("error", ex.getMessage()));
     }
 }
