@@ -1,11 +1,13 @@
 package com.learn.book.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.learn.book.dto.BookDto;
+import com.learn.book.dto.NotificationDto;
 import com.learn.book.exception.BookNotFoundException;
 import com.learn.book.exception.DuplicateBookException;
 import com.learn.book.mapper.BookMapper;
@@ -20,6 +22,7 @@ public class BookService {
     private final SimpMessagingTemplate messagingTemplate;
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final NotificationService notificationService;
 
     public List<BookDto> getAllBook() {
         try {
@@ -40,7 +43,18 @@ public class BookService {
 
         Book book = bookMapper.toEntity(bookDto);
         Book saved = bookRepository.save(book);
-        messagingTemplate.convertAndSend("/topic/books", saved);
+
+        NotificationDto notificationDto = NotificationDto.builder()
+                .title("Book added")
+                .content("New book")
+                .read(false)
+                // .recipientUsername("all")
+                .timestamp(LocalDateTime.now().toString())
+                .build();
+
+        notificationService.sendNotification(notificationDto);
+
+        messagingTemplate.convertAndSend("/topic/books", bookMapper.toDto(saved));
         return bookMapper.toDto(saved);
     }
 

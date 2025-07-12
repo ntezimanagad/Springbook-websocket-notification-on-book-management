@@ -26,4 +26,10 @@ public class GlobalExceptionHandler {
                 .body(Map.of("error", "An unexpected error occurred."));
 
     }
+
+    @ExceptionHandler(NotificationNotFoundException.class)
+    public ResponseEntity<?> handleNotificationNotFound(NotificationNotFoundException ex) {
+        return ResponseEntity.badRequest()
+                .body(Map.of("eror", ex.getMessage()));
+    }
 }
